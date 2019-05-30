@@ -1,0 +1,396 @@
+{% extends "layout.html" %} {% block script %}
+<script src="/static/ajax.js"></script>
+{% endblock %} {% block title %} Homepage {% endblock %} {% block main %}
+<section class="text-center" id="header">
+  <h2>Choose your tank</h2>
+  <form>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="selectLvl">Level</label>
+        <select
+          class="form-control mb-2 mr-sm-2"
+          id="selectLvl"
+          onchange="loadTankList();"
+        >
+          <option selected value="all">All</option>
+          {% for i in range(10) %}
+          <option value="{{ i + 1 }}">{{ i + 1 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="selectType">Type</label>
+        <select
+          class="form-control mb-2 mr-sm-2"
+          id="selectType"
+          onchange="loadTankList();"
+        >
+          <option selected value="all">All</option>
+          <option value="lightTank">Light tank</option>
+          <option value="mediumTank">Medium tank</option>
+          <option value="heavyTank">Heavy tank</option>
+          <option value="AT-SPG">AT-SPG</option>
+          <option value="SPG">SPG</option>
+        </select>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="selectNation">Nation</label>
+        <select
+          class="form-control mb-2 mr-sm-2"
+          id="selectNation"
+          onchange="loadTankList();"
+        >
+          <option selected value="all">All</option>
+          <option value="ussr">USSR</option>
+          <option value="usa">USA</option>
+          <option value="uk">UK</option>
+          <option value="sweden">Sweden</option>
+          <option value="germany">Germany</option>
+          <option value="france">France</option>
+          <option value="china">China</option>
+          <option value="japan">Japan</option>
+        </select>
+      </div>
+    </div>
+  </form>
+  <form action="/params" method="post" class="d-flex justify-content-center">
+    <div class="form-group col-md-4 align-items-center">
+      <select
+        class="form-control mb-2 mr-sm-2"
+        id="selectTank"
+        name="selectTank"
+        onchange="loadTank(this.value);"
+      >
+        <option selected value="None">Select</option>
+        {% for tank in tanks %} {% if (tank["is_premium"]) %}
+        <option value="{{ tank['name'] }}"
+          >{{ tank["lvl"] }} lvl | {{ tank["name"] }} ★
+        </option>
+        {% else %}
+        <option value="{{ tank['name'] }}"
+          >{{ tank["lvl"] }} lvl | {{ tank["name"] }}</option
+        >
+        {% endif %} {% endfor %}
+      </select>
+    </div>
+  </form>
+</section>
+
+<div class="d-flex justify-content-center spiner"></div>
+
+<section class="text-center" id="tankParams" style="visibility: hidden;">
+  <h1></h1>
+  <img id="tankImg" />
+  <p class="description"></p>
+  <div class="row justify-content-center align-self-center">
+    <div class="col">
+      <div class="container">
+      <div class="row justify-content-center align-items-center">
+        <table class="table table-sm">
+          <thead class="thead-dark">
+            <th colspan="2">Modules</th>
+          </thead>
+        </table>
+        <div class="col">
+          <div class="row justify-content-center">
+            <div class="btn-group dropup btn-block">
+              <button
+                class="btn btn-outline-secondary btn-lg dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img id="gunImg" src="" width="40 px" height="40 px" />
+                <span class="align-middle">Guns</span>
+              </button>
+              <div class="dropdown-menu btn-block" id="guns"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="row justify-content-center" id="discriptionGun">
+            <div class="col" id="gunCol1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center align-items-center border-top">
+        <div class="col">
+          <div class="row justify-content-center">
+            <div class="btn-group dropup btn-block">
+              <button
+                class="btn btn-outline-secondary btn-lg dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img id="turretImg" src="" width="40 px" height="40 px" />
+                <span class="align-middle">Turrets</span>
+              </button>
+              <div class="dropdown-menu btn-block" id="turrets"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="row justify-content-center" id="discriptionTur">
+            <div class="col" id="turretCol1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center align-items-center border-top">
+        <div class="col">
+          <div class="row justify-content-center">
+            <div class="btn-group dropup btn-block">
+              <button
+                class="btn btn-outline-secondary btn-lg dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img id="susImg" src="" width="40 px" height="40 px" />
+                <span class="align-middle">Suspensions</span>
+              </button>
+              <div class="dropdown-menu btn-block" id="suspensions"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="row justify-content-center" id="discriptionSus">
+            <div class="col" id="suspensionCol1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center align-items-center border-top">
+        <div class="col">
+          <div class="row justify-content-center">
+            <div class="btn-group dropup btn-block">
+              <button
+                class="btn btn-outline-secondary btn-lg dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img id="engineImg" src="" width="40 px" height="40 px" />
+                <span class="align-middle">Engines</span>
+              </button>
+              <div class="dropdown-menu btn-block" id="engines"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="row justify-content-center" id="discriptionEng">
+            <div class="col" id="engineCol1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center align-items-center border-top">
+        <div class="col">
+          <div class="row justify-content-center">
+            <div class="btn-group dropup btn-block">
+              <button
+                class="btn btn-outline-secondary btn-lg dropdown-toggle"
+                id="radioButton"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img id="radioImg" src="" width="40 px" height="40 px" />
+                <span class="align-middle">Radios</span>
+              </button>
+              <div class="dropdown-menu btn-block" id="radios"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="row justify-content-center" id="discriptionRad">
+            <div class="col" id="radioCol1"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <table class="table table-sm">
+          <thead class="thead-dark">
+            <th colspan="2">Crew</th>
+          </thead>
+        </table>
+
+        <label style="font-weight: bold;" for="crewRange"
+          >Crew level<br /><span id="crewLvl"></span
+        ></label>
+        <input
+          type="range"
+          class="custom-range"
+          min="50"
+          max="100"
+          value="100"
+          id="crewRange"
+          onchange="createInfo(false);"
+        />
+      </div>
+      <div class="row justify-content-center" id="perks">
+        <table class="table table-sm">
+          <thead class="thead-dark">
+            <th colspan="2">Perks</th>
+          </thead>
+        </table>
+        <p class="perks w-100"></p>
+        <!--<div class="col-xs-1  mr-md-3">
+          <a href="#perks" onclick=selectPerk(this); id="camo" class="perks"><img src="/static/camo.png" class="rounded mx-auto d-block perks" alt="Camo" width="52 px" height="52 px"></a>
+        </div>-->
+        <div class="col-xs-1  mr-md-3">
+          <a href="#/" onclick="selectPerk(this);" id="brothers" class="perks"
+            ><img
+              src="/static/brothers-in-arms.png"
+              class="rounded mx-auto d-block perks"
+              alt="Brothers in arms"
+              width="52 px"
+              height="52 px"
+          /></a>
+        </div>
+        <div class="col-xs-1 mr-md-3">
+          <a href="#/" onclick="selectPerk(this);" id="eagle" class="perks"
+            ><img
+              src="/static/eagle-eye.png"
+              class="rounded mx-auto d-block perks"
+              alt="Eagle eye"
+              width="52 px"
+              height="52 px"
+          /></a>
+        </div>
+        <div class="col-xs-1 mr-md-3">
+          <a href="#/" onclick="selectPerk(this);" id="ace" class="perks"
+            ><img
+              src="/static/ace.png"
+              class="rounded mx-auto d-block perks"
+              alt="Ace"
+              width="52 px"
+              height="52 px"
+          /></a>
+        </div>
+        <div class="col-xs-1 mr-md-3">
+          <a href="#/" onclick="selectPerk(this);" id="master" class="perks"
+            ><img
+              src="/static/off-road-master.png"
+              class="rounded mx-auto d-block perks"
+              alt="Off road master"
+              width="52 px"
+              height="52 px"
+          /></a>
+        </div>
+        <div class="col-xs-1 mr-md-3">
+          <a href="#/" onclick="selectPerk(this);" id="boffin" class="perks"
+            ><img
+              src="/static/boffin.png"
+              class="rounded mx-auto d-block perks"
+              alt="Boffin"
+              width="52 px"
+              height="52 px"
+          /></a>
+        </div>
+        <div class="col-xs-1 mr-md-3">
+          <a href="#/" onclick="selectPerk(this);" id="sonar" class="perks"
+            ><img
+              src="/static/sonar.png"
+              class="rounded mx-auto d-block perks"
+              alt="Sonar"
+              width="52 px"
+              height="52 px"
+          /></a>
+        </div>
+      </div>
+      <div class="row justify-content-center" id="ammo">
+        <table class="table table-sm">
+          <thead class="thead-dark">
+            <th colspan="2">Ammunition</th>
+          </thead>
+        </table>
+      </div>
+      <div
+        class="row justify-content-center align-items-center"
+      >
+        <table class="table table-sm">
+          <thead class="thead-dark">
+            <th colspan="2">Equipment</th>
+          </thead>
+        </table>
+        <div class="w-100">Slots available: <span id="optionalDeviceSlots"></span></div>
+        <div class="w-100"><p class="underline">Standard:</p></div>
+        <div
+          class="row justify-content-center align-items-center"
+          id="optionalDevice"
+        >
+        </div>
+        <div class="w-100"><p class="underline">Improved:</p></div>
+        <div
+          class="row justify-content-center align-items-center"
+          id="improvedEquipment"
+        >
+        </div>
+      </div>
+      <div
+        class="row justify-content-center align-items-center"
+      >
+      <table class="table table-sm">
+        <thead class="thead-dark">
+          <th colspan="2">Consumables</th>
+        </thead>
+      </table>
+      <div class="w-100">Slots available: <span id="consumableSlots"></span></div>
+      <div class="w-100"><p class="underline">Regular:</p></div>
+      <div
+        class="row justify-content-center align-items-center"
+        id="regularConsumables"
+      >
+      </div>
+      <div class="w-100"><p class="underline">Improved:</p></div>
+      <div
+        class="row justify-content-center align-items-center"
+        id="premiumConsumables"
+      >
+      </div>
+      </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="container">
+      <div class="row justify-content-center align-items-center">
+        <table class="table table-sm" id="tableCommon">
+          <thead class="thead-dark"></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <table class="table table-sm" id="tableFirepower">
+          <thead class="thead-dark"></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="row justify-content-center align-items-center">
+        <table class="table table-sm" id="tableSurvivability">
+          <thead class="thead-dark"></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <table class="table table-sm" id="tableMobility">
+          <thead class="thead-dark"></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <table class="table table-sm" id="tableSpotting">
+          <thead class="thead-dark"></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

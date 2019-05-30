@@ -1,0 +1,112 @@
+
+/*body::after {
+  content: "";
+  background-image: url("bg3.jpg");
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}*/
+
+body {
+  background-color: lightgray;
+  /*font-family: 'Courgette', cursive;
+  font-family: 'Patua One', cursive;*/
+  font-family: 'Overlock', cursive;
+}
+
+a, a:hover {
+  color: black;
+}
+
+#discriptionGun, #discriptionTur, #discriptionSus, #discriptionEng, #discriptionRad{
+  font-size: 0.8em;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.medium {
+  font-size: medium;
+}
+
+.dropdown-item.active {
+  background-color: lightgray;
+}
+
+.dropdown-item {
+  font-size: 1em;
+  overflow: hidden;
+}
+
+th {
+  text-align: left;
+}
+
+td {
+  text-align: right;
+}
+
+#crew span {
+  font-weight: 900;
+}
+
+.premium {
+  color: yellow;
+}
+
+.dropup .dropdown-toggle::after {
+  vertical-align: 0;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.custom-range {
+  margin-bottom: 1rem;
+}
+
+img.perks, img.ammo, img.optionalDevice, img.consumables{
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+p.perks{
+  font-size: large;
+  color: red;
+
+}
+
+/*img.perks, img.optionalDevice{
+  opacity: 0.8;
+}*/
+
+.checked img {
+  border-color: yellow;
+  border-width: 3px;
+  opacity: 1;
+}
+
+img.opacityLow {
+  opacity: 0.2;
+}
+
+img.redBackground {
+  opacity: 0.2;
+  background-color: rgba(255, 99, 71, 0.5);
+}
+
+#optionalDevice {
+  font-size: large;
+}
+
+.red {
+  color: red;
+}
