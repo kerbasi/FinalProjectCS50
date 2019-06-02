@@ -83,7 +83,6 @@ def conf2():
 def load():
     """in JSON format"""
     name = request.args.get('tank')
-    print(1)
     answer = db.execute("SELECT * FROM tanks WHERE name = :name", name=name)
     crew = db.execute(
         "SELECT * FROM crew WHERE id_tank = :id_tank", id_tank=answer[0]['id_tank'])
@@ -98,7 +97,6 @@ def load():
     turrets_id = answer[0]['turrets']
     turrets_id = turrets_id.rsplit(", ")
     engines = []
-    print(engines_id)
     for e in engines_id:
         engines.append(db.execute(
             "SELECT * FROM engines WHERE module_id = :module_id", module_id=e)[0])
@@ -128,7 +126,6 @@ def load():
     answer[0]['guns'] = guns
     answer[0]['suspensions'] = suspensions
     answer[0]['turrets'] = turrets
-    print(answer[0])
     return jsonify(answer[0])
 
 
@@ -165,7 +162,6 @@ def loadlist():
         nation9 = nation8 = nation7 = nation6 = nation5 = nation4 = nation3 = nation2 = nation
     answer = db.execute("SELECT name, lvl, nation, is_premium FROM tanks WHERE (lvl >= :lvl AND lvl <= :lvl2) AND (type = :tankType OR type = :tankType2 OR type = :tankType3 OR type = :tankType4 OR type = :tankType5) AND (nation = :nation OR nation = :nation2 OR nation = :nation3 OR nation = :nation4 OR nation = :nation5 OR nation = :nation6 OR nation = :nation7 OR nation = :nation8 OR nation = :nation9) ORDER BY lvl",
                         lvl=lvl, lvl2=lvl2, tankType=tankType, tankType2=tankType2, tankType3=tankType3, tankType4=tankType4, tankType5=tankType5, nation=nation, nation2=nation2, nation3=nation3, nation4=nation4, nation5=nation5, nation6=nation6, nation7=nation7, nation8=nation8, nation9=nation9)
-    print(answer)
     return jsonify(answer)
 
 
@@ -189,7 +185,6 @@ def getprofile():
             if (gun_id in v["profile_id"]) & (suspension_id in v["profile_id"]) & (turret_id in v["profile_id"]) & (radio_id in v["profile_id"]) & (engine_id in v["profile_id"]):
                 profile_id = v["profile_id"]
                 break
-    print(profile_id)
     if len(profile_id) == 0:
         return jsonify("None")
     return jsonify(takeProfile(tank_id, profile_id))
