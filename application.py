@@ -2,7 +2,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from cs50 import SQL
 from flask import Flask, redirect, render_template, request, session, jsonify
-from flask_session import Session
+#from flask_session import Session
 from tempfile import mkdtemp
 
 
@@ -21,7 +21,7 @@ sched.start()
 app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
-app.config["TEMPLATES_AUTO_RELOAD"] = True
+#app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Ensure responses aren't cached
 @app.after_request
@@ -33,10 +33,10 @@ def after_request(response):
 
 
 # Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_FILE_DIR"] = mkdtemp()
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+#app.config["SESSION_FILE_DIR"] = mkdtemp()
+#app.config["SESSION_PERMANENT"] = False
+#app.config["SESSION_TYPE"] = "filesystem"
+#Session(app)###
 
 db = SQL("sqlite:///tanks.db")
 
@@ -54,7 +54,7 @@ def params():
         tanks = db.execute("SELECT name, lvl, nation FROM tanks")
         tankInfo = db.execute(
             "SELECT nation, lvl, type, price_credit, hp, hull_hp, guns FROM tanks WHERE name = :name", name=name)
-        guns = tankInfo[0]['guns'].rstrip(',')
+        #guns = tankInfo[0]['guns'].rstrip(',')
         return render_template("params.html", tanks=tanks, tankInfo=tankInfo)
     else:
         tanks = db.execute(
