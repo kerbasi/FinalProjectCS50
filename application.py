@@ -19,6 +19,7 @@ sched.start()
 
 # Configure application
 app = Flask(__name__)
+app.config['DEBUG'] = False
 
 # Ensure templates are auto-reloaded
 #app.config["TEMPLATES_AUTO_RELOAD"] = True
